@@ -16,11 +16,15 @@ using UnityEngine.UI;
 
 public class FirstPersonController : MonoBehaviour
 {
+    
+
     private Rigidbody rb;
 
     #region Camera Movement Variables
 
     public Camera playerCamera;
+    public Transform armPivot; // Référence au pivot des bras
+    private Animator animator; // Référence à l'Animator
 
     public float fov = 60f;
     public bool invertCamera = false;
@@ -151,7 +155,12 @@ public class FirstPersonController : MonoBehaviour
 
     void Start()
     {
-        if(lockCursor)
+        animator = GetComponentInChildren<Animator>();
+        if (animator == null)
+        {
+            Debug.Log("Animateur mal link");
+        }
+        if (lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -205,7 +214,7 @@ public class FirstPersonController : MonoBehaviour
         #region Camera
 
         // Control camera movement
-        if(cameraCanMove)
+        if (cameraCanMove)
         {
             yaw = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * mouseSensitivity;
 
@@ -219,11 +228,17 @@ public class FirstPersonController : MonoBehaviour
                 pitch += mouseSensitivity * Input.GetAxis("Mouse Y");
             }
 
-            // Clamp pitch between lookAngle
+            // Clamp pitch entre lookAngle
             pitch = Mathf.Clamp(pitch, -maxLookAngle, maxLookAngle);
 
             transform.localEulerAngles = new Vector3(0, yaw, 0);
             playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
+
+            // Synchroniser le pivot des bras avec la rotation verticale de la caméra
+            if (armPivot != null)
+            {
+                armPivot.localRotation = Quaternion.Euler(pitch, 0, 0);
+            }
         }
 
         #region Camera Zoom
@@ -378,10 +393,18 @@ public class FirstPersonController : MonoBehaviour
             if (targetVelocity.x != 0 || targetVelocity.z != 0 && isGrounded)
             {
                 isWalking = true;
+                /*if (animator != null)
+                {
+                    animator.SetBool("isRunning", true); // Active l'animation de course
+                }*/
             }
             else
             {
                 isWalking = false;
+                /*if (animator != null)
+                {
+                    animator.SetBool("isRunning", false); // Désactive l'animation de course
+                }*/
             }
 
             // All movement calculations shile sprint is active
@@ -401,6 +424,10 @@ public class FirstPersonController : MonoBehaviour
                 if (velocityChange.x != 0 || velocityChange.z != 0)
                 {
                     isSprinting = true;
+                    /*if (animator != null)
+                    {
+                        animator.SetBool("isRunning", true); // Active l'animation de course
+                    } */
 
                     if (isCrouched)
                     {
@@ -419,6 +446,10 @@ public class FirstPersonController : MonoBehaviour
             else
             {
                 isSprinting = false;
+                /*if (animator != null)
+                {
+                    animator.SetBool("isRunning", false); // Désactive l'animation de course
+                }*/
 
                 if (hideBarWhenFull && sprintRemaining == sprintDuration)
                 {
@@ -550,7 +581,7 @@ public class FirstPersonController : MonoBehaviour
 
         EditorGUILayout.Space();
         GUILayout.Label("Modular First Person Controller", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 16 });
-        GUILayout.Label("By Jess Case", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Normal, fontSize = 12 });
+        GUILayout.Label("By ADRIEN PATTE", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Normal, fontSize = 12 });
         GUILayout.Label("version 1.0.1", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Normal, fontSize = 12 });
         EditorGUILayout.Space();
 
@@ -559,6 +590,7 @@ public class FirstPersonController : MonoBehaviour
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         GUILayout.Label("Camera Setup", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 13 }, GUILayout.ExpandWidth(true));
         EditorGUILayout.Space();
+        fpc.armPivot = (Transform)EditorGUILayout.ObjectField(new GUIContent("Arm Pivot", "Transform pivot des bras pour suivre la caméra."), fpc.armPivot, typeof(Transform), true);
 
         fpc.playerCamera = (Camera)EditorGUILayout.ObjectField(new GUIContent("Camera", "Camera attached to the controller."), fpc.playerCamera, typeof(Camera), true);
         fpc.fov = EditorGUILayout.Slider(new GUIContent("Field of View", "The camera’s view angle. Changes the player camera directly."), fpc.fov, fpc.zoomFOV, 179f);
