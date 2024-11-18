@@ -366,7 +366,6 @@
 -analyzer:"D:/Unity/2022.3.52f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/ModularFirstPersonController/FirstPersonController/FirstPersonController.cs"
 "Assets/_3DModels/Revolver/Scripts/Gun_rotation.cs"
-"Assets/_Scripts/PlayerController.cs"
 "Assets/_Scripts/_KinematicCharacterController/Core/ICharacterController.cs"
 "Assets/_Scripts/_KinematicCharacterController/Core/IMoverController.cs"
 "Assets/_Scripts/_KinematicCharacterController/Core/KCCSettings.cs"
