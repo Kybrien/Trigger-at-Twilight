@@ -97,6 +97,14 @@ public class GunController : MonoBehaviour
                 Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             }
 
+            // Vérifier si l'objet touché est un "InteractiveObject"
+            InteractiveObject interactive = hit.collider.GetComponent<InteractiveObject>();
+            if (interactive != null)
+            {
+                interactive.TriggerAction(); // Appeler l'action correspondante (Play, Leave, ExternLink)
+                return; // Arrêter l'exécution ici pour éviter de continuer avec d'autres collisions
+            }
+
             // Vérifier si l'objet touché a un "HealthComponent"
             HealthComponent target = hit.collider.GetComponent<HealthComponent>();
             if (target != null)
