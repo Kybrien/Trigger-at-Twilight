@@ -21,7 +21,7 @@ public class GhostManager : MonoBehaviour
     {
         if (playerTransform != null)
         {
-            for (int i = 0; i < 10; i++) // Essayer plusieurs fois pour trouver une position valide
+            for (int i = 0; i < 20; i++) // Essayer plusieurs fois pour trouver une position valide
             {
                 // Générer une position aléatoire autour du joueur dans un rayon donné
                 Vector3 randomDirection = Random.insideUnitSphere * spawnRadius;

@@ -105,7 +105,7 @@ public class GhostController : MonoBehaviour
             {
                 yield return null;
                 currentState = animator.GetCurrentAnimatorStateInfo(0);
-            } while (currentState.normalizedTime < 1.0f);
+            } while (currentState.normalizedTime < 2.0f);
         }
 
         // Détruire le fantôme après la fin de l'animation
