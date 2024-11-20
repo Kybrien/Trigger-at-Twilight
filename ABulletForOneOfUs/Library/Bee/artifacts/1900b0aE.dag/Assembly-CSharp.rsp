@@ -387,6 +387,7 @@
 "Assets/_Scripts/GunController.cs"
 "Assets/_Scripts/HealthComponent.cs"
 "Assets/_Scripts/InteractiveObject.cs"
+"Assets/_Scripts/TimeController.cs"
 "Assets/_UI/UI_3D/Scripts/SceneViewText.cs"
 "Assets/_VFX/Lumen/Contents/Scripts/Data/DynamicRayData.cs"
 "Assets/_VFX/Lumen/Contents/Scripts/Data/FlareData.cs"
