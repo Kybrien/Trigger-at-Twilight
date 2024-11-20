@@ -10,9 +10,6 @@ public class GhostController : MonoBehaviour
     [Header("Animator Settings")]
     public Animator animator;
 
-    [Header("Time Control Settings")]
-    public TimeController timeController; // Référence au TimeController
-
     void Start()
     {
         // Le fantôme commence désactivé
@@ -25,12 +22,6 @@ public class GhostController : MonoBehaviour
         gameObject.SetActive(true);
         transform.position = spawnPosition;
         isActive = true;
-
-        // Utiliser le TimeController pour ralentir le temps
-        if (timeController != null)
-        {
-            timeController.StartSlowMotion();
-        }
 
         // Lancer le timer pour que le fantôme tue le joueur s'il n'est pas détruit
         Invoke("GhostAttack", ghostLifetime);
@@ -52,12 +43,6 @@ public class GhostController : MonoBehaviour
         if (isActive)
         {
             Debug.Log("Le fantôme a tué le joueur !");
-
-            // Rétablir le temps à la normale
-            if (timeController != null)
-            {
-                timeController.StopSlowMotion();
-            }
 
             // Lancer une animation aléatoire avant de détruire le fantôme
             if (animator != null)
@@ -93,21 +78,11 @@ public class GhostController : MonoBehaviour
     {
         if (animator != null)
         {
-            // Le joueur tue le fantôme - remettre le temps à la normale d'abord
-            if (timeController != null)
-            {
-                timeController.StopSlowMotion();
-            }
-
             animator.SetBool("isDead", true);
             StartCoroutine(DestroyAfterAnimation()); // Attendre la fin de l'animation de mort avant de détruire
         }
         else
         {
-            if (timeController != null)
-            {
-                timeController.StopSlowMotion();
-            }
             Destroy(gameObject);
         }
 
