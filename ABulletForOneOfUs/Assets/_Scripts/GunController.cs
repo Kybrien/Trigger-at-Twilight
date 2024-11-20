@@ -105,6 +105,13 @@ public class GunController : MonoBehaviour
                 return; // Arrêter l'exécution ici pour éviter de continuer avec d'autres collisions
             }
 
+            GhostController ghost = hit.collider.GetComponent<GhostController>();
+            if (ghost != null)
+            {
+                ghost.DestroyGhost();  // Détruire le fantôme
+                return; // Arrêter l'exécution ici
+            }
+
             // Vérifier si l'objet touché a un "HealthComponent"
             HealthComponent target = hit.collider.GetComponent<HealthComponent>();
             if (target != null)

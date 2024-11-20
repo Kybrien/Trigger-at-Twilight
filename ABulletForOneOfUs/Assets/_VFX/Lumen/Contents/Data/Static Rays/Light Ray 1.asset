@@ -78,4 +78,4 @@ MonoBehaviour:
   angleFadeStart: 0
   angleFadeEnd: 0
   useVariation: 1
-  useLightColor: 0
+  useLightColor: 1
