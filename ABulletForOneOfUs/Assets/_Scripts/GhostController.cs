@@ -1,24 +1,22 @@
 using UnityEngine;
 using System.Collections;
+
 public class GhostController : MonoBehaviour
 {
     [Header("Ghost Settings")]
     public float ghostLifetime = 5f; // Temps avant que le fantôme tue le joueur
-    public float slowMotionScale = 0.2f; // Facteur de ralentissement du temps
     private bool isActive = false;
-
-    private float originalFixedDeltaTime;
 
     [Header("Animator Settings")]
     public Animator animator;
+
+    [Header("Time Control Settings")]
+    public TimeController timeController; // Référence au TimeController
 
     void Start()
     {
         // Le fantôme commence désactivé
         gameObject.SetActive(true);
-
-        // Sauvegarder la valeur originale de fixedDeltaTime pour pouvoir la restaurer plus tard
-        originalFixedDeltaTime = Time.fixedDeltaTime;
     }
 
     public void Spawn(Vector3 spawnPosition)
@@ -28,11 +26,11 @@ public class GhostController : MonoBehaviour
         transform.position = spawnPosition;
         isActive = true;
 
-        // Ralentir le temps
-        Time.timeScale = slowMotionScale;
-
-        // Ajuster Time.fixedDeltaTime proportionnellement pour conserver la fluidité
-        Time.fixedDeltaTime = originalFixedDeltaTime * slowMotionScale;
+        // Utiliser le TimeController pour ralentir le temps
+        if (timeController != null)
+        {
+            timeController.StartSlowMotion();
+        }
 
         // Lancer le timer pour que le fantôme tue le joueur s'il n'est pas détruit
         Invoke("GhostAttack", ghostLifetime);
@@ -54,8 +52,12 @@ public class GhostController : MonoBehaviour
         if (isActive)
         {
             Debug.Log("Le fantôme a tué le joueur !");
-            // Remettre le temps à la normale après l'attaque
-            ResetTimeScale();
+
+            // Rétablir le temps à la normale
+            if (timeController != null)
+            {
+                timeController.StopSlowMotion();
+            }
 
             // Lancer une animation aléatoire avant de détruire le fantôme
             if (animator != null)
@@ -91,16 +93,24 @@ public class GhostController : MonoBehaviour
     {
         if (animator != null)
         {
+            // Le joueur tue le fantôme - remettre le temps à la normale d'abord
+            if (timeController != null)
+            {
+                timeController.StopSlowMotion();
+            }
+
             animator.SetBool("isDead", true);
             StartCoroutine(DestroyAfterAnimation()); // Attendre la fin de l'animation de mort avant de détruire
         }
         else
         {
+            if (timeController != null)
+            {
+                timeController.StopSlowMotion();
+            }
             Destroy(gameObject);
         }
 
-        // Remettre le temps à la normale si le joueur détruit le fantôme
-        ResetTimeScale();
         isActive = false;
 
         GhostIndicatorUI ghostIndicator = FindObjectOfType<GhostIndicatorUI>();
@@ -114,23 +124,16 @@ public class GhostController : MonoBehaviour
     {
         if (animator != null)
         {
-            AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
             // Attendre que l'animation courante soit terminée
-            while (currentState.normalizedTime < 1.0f && !currentState.IsTag("Dead"))
+            AnimatorStateInfo currentState;
+            do
             {
                 yield return null;
                 currentState = animator.GetCurrentAnimatorStateInfo(0);
-            }
+            } while (currentState.normalizedTime < 1.0f);
         }
 
         // Détruire le fantôme après la fin de l'animation
         Destroy(gameObject);
-    }
-
-    void ResetTimeScale()
-    {
-        // Restaurer Time.fixedDeltaTime avant de restaurer Time.timeScale
-        Time.fixedDeltaTime = originalFixedDeltaTime;
-        Time.timeScale = 1f;
     }
 }

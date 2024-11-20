@@ -15,20 +15,6 @@ public class TimeController : MonoBehaviour
         StartFixedDeltaTime = Time.fixedDeltaTime;
     }
 
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartSlowMotion();
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            StopSlowMotion();
-        }
-    }
-
     public void StartSlowMotion()
     {
         Time.timeScale = TimeScale;

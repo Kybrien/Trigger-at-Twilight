@@ -10731,6 +10731,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6210294537576029237, guid: 744ff84c3a2963241b3e66c314602cc6, type: 3}
+      propertyPath: timeController
+      value: 
+      objectReference: {fileID: 1465747572}
     - target: {fileID: 7077252181226063441, guid: 744ff84c3a2963241b3e66c314602cc6, type: 3}
       propertyPath: m_Name
       value: GHOST 1
