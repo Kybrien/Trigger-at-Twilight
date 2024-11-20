@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections;
 public class GhostController : MonoBehaviour
 {
     [Header("Ghost Settings")]
@@ -7,10 +7,18 @@ public class GhostController : MonoBehaviour
     public float slowMotionScale = 0.2f; // Facteur de ralentissement du temps
     private bool isActive = false;
 
+    private float originalFixedDeltaTime;
+
+    [Header("Animator Settings")]
+    public Animator animator;
+
     void Start()
     {
         // Le fantôme commence désactivé
         gameObject.SetActive(true);
+
+        // Sauvegarder la valeur originale de fixedDeltaTime pour pouvoir la restaurer plus tard
+        originalFixedDeltaTime = Time.fixedDeltaTime;
     }
 
     public void Spawn(Vector3 spawnPosition)
@@ -23,6 +31,9 @@ public class GhostController : MonoBehaviour
         // Ralentir le temps
         Time.timeScale = slowMotionScale;
 
+        // Ajuster Time.fixedDeltaTime proportionnellement pour conserver la fluidité
+        Time.fixedDeltaTime = originalFixedDeltaTime * slowMotionScale;
+
         // Lancer le timer pour que le fantôme tue le joueur s'il n'est pas détruit
         Invoke("GhostAttack", ghostLifetime);
     }
@@ -31,9 +42,10 @@ public class GhostController : MonoBehaviour
     {
         if (isActive)
         {
-            // Faire face au joueur (optionnel selon le comportement souhaité)
+            // Faire face au joueur
             Transform playerTransform = Camera.main.transform;
-            transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
+            Vector3 lookDirection = new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z);
+            transform.LookAt(lookDirection);
         }
     }
 
@@ -42,27 +54,83 @@ public class GhostController : MonoBehaviour
         if (isActive)
         {
             Debug.Log("Le fantôme a tué le joueur !");
-            // Ici, implémentez la logique pour terminer la partie ou infliger des dégâts mortels
-            // Exemple : FindObjectOfType<HealthComponent>().TakeDamage(999);
-
             // Remettre le temps à la normale après l'attaque
-            Time.timeScale = 1f;
+            ResetTimeScale();
 
-            // Détruire le fantôme
-            Destroy(gameObject);
+            // Lancer une animation aléatoire avant de détruire le fantôme
+            if (animator != null)
+            {
+                int rand = Random.Range(0, 4);
+                switch (rand)
+                {
+                    case 0:
+                        animator.SetTrigger("Shuffling");
+                        break;
+                    case 1:
+                        animator.SetTrigger("Hiphop");
+                        break;
+                    case 2:
+                        animator.SetTrigger("Twerk");
+                        break;
+                    default:
+                        animator.SetTrigger("BreakDance");
+                        break;
+                }
+
+                // Attendre la fin de l'animation avant de détruire le fantôme
+                StartCoroutine(DestroyAfterAnimation());
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
     public void DestroyGhost()
     {
+        if (animator != null)
+        {
+            animator.SetBool("isDead", true);
+            StartCoroutine(DestroyAfterAnimation()); // Attendre la fin de l'animation de mort avant de détruire
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         // Remettre le temps à la normale si le joueur détruit le fantôme
-        Time.timeScale = 1f;
+        ResetTimeScale();
         isActive = false;
+
         GhostIndicatorUI ghostIndicator = FindObjectOfType<GhostIndicatorUI>();
         if (ghostIndicator != null)
         {
             ghostIndicator.ghostTransform = null;
         }
+    }
+
+    IEnumerator DestroyAfterAnimation()
+    {
+        if (animator != null)
+        {
+            AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
+            // Attendre que l'animation courante soit terminée
+            while (currentState.normalizedTime < 1.0f && !currentState.IsTag("Dead"))
+            {
+                yield return null;
+                currentState = animator.GetCurrentAnimatorStateInfo(0);
+            }
+        }
+
+        // Détruire le fantôme après la fin de l'animation
         Destroy(gameObject);
+    }
+
+    void ResetTimeScale()
+    {
+        // Restaurer Time.fixedDeltaTime avant de restaurer Time.timeScale
+        Time.fixedDeltaTime = originalFixedDeltaTime;
+        Time.timeScale = 1f;
     }
 }

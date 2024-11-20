@@ -12,10 +12,16 @@ public class GhostIndicatorUI : MonoBehaviour
 
     void Update()
     {
-        if (ghostTransform == null || playerCamera == null || indicatorImage == null)
+        if (ghostTransform == null)
         {
-            indicatorImage.gameObject.SetActive(false); // Désactiver si pas de fantôme à suivre
+            // Si aucun fantôme n'est présent, désactiver l'image et sortir de la fonction
+            indicatorImage.gameObject.SetActive(false);
             return;
+        }
+        else
+        {
+            // Si un fantôme est présent, activer l'image
+            indicatorImage.gameObject.SetActive(true);
         }
 
         // Calculer la direction vers le fantôme depuis la caméra du joueur
