@@ -1,29 +1,29 @@
 using UnityEngine;
+using TMPro; // Utiliser TextMeshPro pour l'UI
 
-public class TimeController : MonoBehaviour
+public class TimerController : MonoBehaviour
 {
-    [Header("TimeControllerSettings")]
-    public float TimeScale;
+    [Header("UI Elements")]
+    public TextMeshProUGUI timerText; // Référence au texte de l'UI qui affichera le timer (TextMeshPro)
 
-    private float StartTimeScale;
-    private float StartFixedDeltaTime;
+    private float elapsedTime = 0f; // Temps écoulé en secondes
 
-
-    void Start()
+    void Update()
     {
-        StartTimeScale = Time.timeScale;
-        StartFixedDeltaTime = Time.fixedDeltaTime;
+        // Incrémenter le temps écoulé
+        elapsedTime += Time.deltaTime;
+
+        // Convertir le temps écoulé en minutes et secondes
+        int minutes = Mathf.FloorToInt(elapsedTime / 60f);
+        int seconds = Mathf.FloorToInt(elapsedTime % 60f);
+
+        // Mettre à jour le texte du timer
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
-    public void StartSlowMotion()
+    public void ResetTimer()
     {
-        Time.timeScale = TimeScale;
-        Time.fixedDeltaTime = StartFixedDeltaTime * TimeScale;
-    }
-
-    public void StopSlowMotion()
-    {
-        Time.timeScale = StartTimeScale;
-        Time.fixedDeltaTime = StartFixedDeltaTime;
+        elapsedTime = 0f;
+        Update(); // Mettre à jour l'affichage immédiatement
     }
 }
