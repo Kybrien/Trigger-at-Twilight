@@ -31887,7 +31887,7 @@ MonoBehaviour:
   player: {fileID: 680635550}
   cameraTransform: {fileID: 1724290481}
   transitionDuration: 3
-  cameraOffset: {x: 0.03, y: 3, z: 4}
+  cameraOffset: {x: 0, y: 3, z: -3}
   playerAnimator: {fileID: 1411235628}
   playerDeathAnimation: Death
   ghostDanceAnimations:
@@ -38244,7 +38244,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8694395847318445003, guid: 4d309c4d2f4ac854494cea8ec81e5c25, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
