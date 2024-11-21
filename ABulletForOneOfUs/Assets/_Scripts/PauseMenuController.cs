@@ -17,6 +17,9 @@ public class PauseMenuController : MonoBehaviour
 
     private bool isPaused = false;
     private bool isMuted = false;
+    private float inputCooldown = 0.5f; // Cooldown de 500 ms pour éviter les doubles clics
+    private float lastInputTime;
+    private bool interactionBlocked = false; // Bloquer les interactions durant le cooldown
 
     private FirstPersonController playerController;
     private GunController gunController;
@@ -24,9 +27,9 @@ public class PauseMenuController : MonoBehaviour
     void Start()
     {
         // Assignation des méthodes aux boutons
-        resumeButton.onClick.AddListener(ResumeGame);
-        quitButton.onClick.AddListener(QuitToMainMenu);
-        soundButton.onClick.AddListener(ToggleSound);
+        resumeButton.onClick.AddListener(() => { if (!interactionBlocked) ResumeGame(); });
+        quitButton.onClick.AddListener(() => { if (!interactionBlocked) QuitToMainMenu(); });
+        soundButton.onClick.AddListener(() => { if (!interactionBlocked) ToggleSound(); });
 
         // Assurer que le menu de pause est caché au début
         pauseMenuUI.SetActive(false);
@@ -42,8 +45,12 @@ public class PauseMenuController : MonoBehaviour
     void Update()
     {
         // Activer/désactiver le menu de pause quand on appuie sur Échap
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && Time.unscaledTime - lastInputTime > inputCooldown)
         {
+            lastInputTime = Time.unscaledTime;
+            interactionBlocked = true;
+            Invoke(nameof(UnblockInteraction), inputCooldown);
+
             if (isPaused)
             {
                 ResumeGame();
@@ -58,7 +65,6 @@ public class PauseMenuController : MonoBehaviour
     // Méthode pour mettre le jeu en pause
     public void PauseGame()
     {
-        Debug.Log("PAUSED");
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f; // Arrêter le temps
         isPaused = true;
@@ -83,7 +89,7 @@ public class PauseMenuController : MonoBehaviour
     // Méthode pour reprendre le jeu
     public void ResumeGame()
     {
-        Debug.Log("RESUME");
+        Debug.Log("Resume");
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f; // Reprendre le temps
         isPaused = false;
@@ -108,7 +114,6 @@ public class PauseMenuController : MonoBehaviour
     // Méthode pour quitter vers le menu principal
     public void QuitToMainMenu()
     {
-        Debug.Log("LEAVE");
         Time.timeScale = 1f; // Reprendre le temps avant de quitter
         SceneManager.LoadScene("MainMenu"); // Charger la scène MainMenu (assure-toi que la scène est ajoutée au Build Settings)
     }
@@ -116,20 +121,27 @@ public class PauseMenuController : MonoBehaviour
     // Méthode pour activer/désactiver le son et basculer les icônes
     public void ToggleSound()
     {
-        Debug.Log("SOUND");
         isMuted = !isMuted;
 
         if (isMuted)
         {
+            Debug.Log("Sound OFF");
             AudioListener.volume = 0f; // Couper tout le son du jeu
             soundOnIcon.SetActive(false); // Cacher l'icône "Sound_ON"
             soundOffIcon.SetActive(true); // Afficher l'icône "Sound_Off"
         }
         else
         {
+            Debug.Log("Sound ON");
             AudioListener.volume = 1f; // Activer le son du jeu
             soundOnIcon.SetActive(true); // Afficher l'icône "Sound_ON"
             soundOffIcon.SetActive(false); // Cacher l'icône "Sound_Off"
         }
+    }
+
+    // Méthode pour débloquer les interactions après le cooldown
+    private void UnblockInteraction()
+    {
+        interactionBlocked = false;
     }
 }

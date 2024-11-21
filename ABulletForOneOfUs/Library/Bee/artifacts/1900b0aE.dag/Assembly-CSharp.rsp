@@ -399,6 +399,7 @@
 "Assets/_Scripts/GhostIndicativUI.cs"
 "Assets/_Scripts/GhostManager.cs"
 "Assets/_Scripts/InteractiveObject.cs"
+"Assets/_Scripts/MovingPlatform.cs"
 "Assets/_Scripts/PauseMenuController.cs"
 "Assets/_Scripts/TimeController.cs"
 "Assets/_VFX/Lumen/Contents/Scripts/Data/DynamicRayData.cs"
