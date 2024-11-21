@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class GunController : MonoBehaviour
 {
@@ -27,10 +28,17 @@ public class GunController : MonoBehaviour
     private bool isReloading = false;
     private int currentAmmo;
 
+    [Header("UI Ammo Settings")]
+    public GameObject ammo1Full;  // Image 1Full
+    public GameObject ammo2Full;  // Image 2Full
+    public GameObject ammo3Full;  // Image 3Full
+    public TextMeshProUGUI ammoText;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         currentAmmo = magazineSize;  // Charger le chargeur au début
+        UpdateAmmoUI();  // Mettre à jour l'UI des balles
     }
 
     void Update()
@@ -64,6 +72,7 @@ public class GunController : MonoBehaviour
 
         // Réduire le nombre de munitions
         currentAmmo--;
+        UpdateAmmoUI();  // Mettre à jour l'UI des balles
 
         // Jouer le son du tir
         if (shootSound != null && audioSource != null)
@@ -153,6 +162,7 @@ public class GunController : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         currentAmmo = magazineSize;  // Remplir le chargeur
+        UpdateAmmoUI();  // Mettre à jour l'UI des balles
         canShoot = true;
         isReloading = false;
     }
@@ -162,6 +172,33 @@ public class GunController : MonoBehaviour
         if (currentAmmo > 0)
         {
             canShoot = true;
+        }
+    }
+
+    void UpdateAmmoUI()
+    {
+        // Désactiver les images en fonction du nombre de munitions restantes
+        ammo1Full.SetActive(currentAmmo >= 1);
+        ammo2Full.SetActive(currentAmmo >= 2);
+        ammo3Full.SetActive(currentAmmo >= 3);
+
+        if (ammoText != null)
+        {
+            switch (currentAmmo)
+            {
+                case 3:
+                    ammoText.text = "III";
+                    break;
+                case 2:
+                    ammoText.text = "II";
+                    break;
+                case 1:
+                    ammoText.text = "I";
+                    break;
+                default:
+                    ammoText.text = "...";
+                    break;
+            }
         }
     }
 }
