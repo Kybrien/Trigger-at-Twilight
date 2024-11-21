@@ -211,6 +211,9 @@ public class FirstPersonController : MonoBehaviour
 
     private void Update()
     {
+        if (!enabled || !cameraCanMove)
+            return;
+
         #region Camera
 
         // Control camera movement
@@ -556,6 +559,16 @@ public class FirstPersonController : MonoBehaviour
             timer = 0;
             joint.localPosition = new Vector3(Mathf.Lerp(joint.localPosition.x, jointOriginalPos.x, Time.deltaTime * bobSpeed), Mathf.Lerp(joint.localPosition.y, jointOriginalPos.y, Time.deltaTime * bobSpeed), Mathf.Lerp(joint.localPosition.z, jointOriginalPos.z, Time.deltaTime * bobSpeed));
         }
+    }
+
+    public void DisableController()
+    {
+        Debug.Log("DISABLED FROM FPController");
+        cameraCanMove = false;
+        playerCanMove = false;
+        Cursor.lockState = CursorLockMode.None; // Libère le curseur
+        Cursor.visible = true;                 // Rend le curseur visible
+        enabled = false; // Désactive totalement le script
     }
 }
 

@@ -39,12 +39,14 @@ public class DeathCameraController : MonoBehaviour
     {
         if (playerController != null)
         {
-            playerController.enabled = false;
+            playerController.DisableController();
         }
+
         if (gunController != null)
         {
-            gunController.enabled = false;
+            gunController.DisableController();
         }
+
         StartCoroutine(DeathSequence());
     }
 

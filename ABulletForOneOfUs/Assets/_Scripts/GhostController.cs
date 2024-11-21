@@ -36,6 +36,9 @@ public class GhostController : MonoBehaviour
 
     void Update()
     {
+        if (!enabled)
+            return;
+
         if (isActive)
         {
             // Faire face au joueur

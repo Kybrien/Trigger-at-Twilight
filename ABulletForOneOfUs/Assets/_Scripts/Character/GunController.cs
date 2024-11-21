@@ -64,6 +64,13 @@ public class GunController : MonoBehaviour
         }
     }
 
+    public void DisableController()
+    {
+        canShoot = false; // Empêche le tir
+        isReloading = false; // Arrête le rechargement
+        enabled = false; // Désactive totalement le script
+    }
+
     void Shoot()
     {
         // Empêche de tirer jusqu'à la fin du cooldown
