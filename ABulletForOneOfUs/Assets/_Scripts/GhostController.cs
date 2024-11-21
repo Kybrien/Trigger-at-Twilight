@@ -40,7 +40,8 @@ public class GhostController : MonoBehaviour
 
     void GhostAttack()
     {
-        if (isActive)
+
+        /*if (isActive)
         {
             Debug.Log("Le fantôme a tué le joueur !");
 
@@ -71,7 +72,7 @@ public class GhostController : MonoBehaviour
             {
                 Destroy(gameObject);
             }
-        }
+        }*/
     }
 
     public void DestroyGhost()
