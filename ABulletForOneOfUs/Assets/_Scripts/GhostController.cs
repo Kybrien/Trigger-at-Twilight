@@ -9,11 +9,18 @@ public class GhostController : MonoBehaviour
 
     [Header("Animator Settings")]
     public Animator animator;
+    private DeathCameraController deathCameraController;
 
     void Start()
     {
         // Le fantôme commence désactivé
         gameObject.SetActive(true);
+
+        deathCameraController = FindObjectOfType<DeathCameraController>();
+        if (deathCameraController == null)
+        {
+            Debug.LogWarning("DeathCameraController est introuvable dans la scène.");
+        }
     }
 
     public void Spawn(Vector3 spawnPosition)
@@ -40,39 +47,15 @@ public class GhostController : MonoBehaviour
 
     void GhostAttack()
     {
-
-        /*if (isActive)
+        if (isActive)
         {
             Debug.Log("Le fantôme a tué le joueur !");
 
-            // Lancer une animation aléatoire avant de détruire le fantôme
-            if (animator != null)
+            if (deathCameraController != null)
             {
-                int rand = Random.Range(0, 4);
-                switch (rand)
-                {
-                    case 0:
-                        animator.SetTrigger("Shuffling");
-                        break;
-                    case 1:
-                        animator.SetTrigger("Hiphop");
-                        break;
-                    case 2:
-                        animator.SetTrigger("Twerk");
-                        break;
-                    default:
-                        animator.SetTrigger("BreakDance");
-                        break;
-                }
-
-                // Attendre la fin de l'animation avant de détruire le fantôme
-                StartCoroutine(DestroyAfterAnimation());
+                deathCameraController.TriggerDeathSequence();
             }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }*/
+        }
     }
 
     public void DestroyGhost()

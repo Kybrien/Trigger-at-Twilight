@@ -31244,8 +31244,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 680635550}
   cameraTransform: {fileID: 1724290481}
-  transitionDuration: 2
-  cameraOffset: {x: 3.2, y: 0, z: 3.2}
+  transitionDuration: 3
+  cameraOffset: {x: 0.03, y: 3, z: 4}
   playerAnimator: {fileID: 1411235628}
   playerDeathAnimation: Death
   ghostDanceAnimations:
@@ -31254,7 +31254,7 @@ MonoBehaviour:
   - Twerk
   - BreakDance
   gameOverText: {fileID: 1775801177}
-  deathSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: 2ada4a91507ac434aa3bfea276d3a90b, type: 3}
   audioSource: {fileID: 680635554}
 --- !u!1001 &842732925
 PrefabInstance:
@@ -50108,7 +50108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ghostPrefab: {fileID: 2920914284558306389, guid: dbb6c7e860c75dd419cc8c29e1e782d2, type: 3}
   playerTransform: {fileID: 680635550}
-  spawnRadius: 30
+  spawnRadius: 25
   spawnableTag: Spawnable
   ghostIndicatorUI: {fileID: 1411334318}
 --- !u!4 &1305030905

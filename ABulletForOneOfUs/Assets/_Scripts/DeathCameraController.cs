@@ -22,10 +22,13 @@ public class DeathCameraController : MonoBehaviour
     public AudioSource audioSource; // Source audio pour jouer les sons
 
     private Animator ghostAnimator; // Référence à l'Animator du fantôme
-    public DeathCameraController deathCameraController;
+    private FirstPersonController playerController;
+    private GunController gunController;
 
     void Start()
     {
+        playerController = FindObjectOfType<FirstPersonController>();
+        gunController = FindObjectOfType<GunController>();
         if (gameOverText != null)
         {
             gameOverText.SetActive(false); // Masquer le texte de Game Over au début
@@ -34,6 +37,14 @@ public class DeathCameraController : MonoBehaviour
 
     public void TriggerDeathSequence()
     {
+        if (playerController != null)
+        {
+            playerController.enabled = false;
+        }
+        if (gunController != null)
+        {
+            gunController.enabled = false;
+        }
         StartCoroutine(DeathSequence());
     }
 
@@ -61,7 +72,7 @@ public class DeathCameraController : MonoBehaviour
         }
 
         // Attendre un instant pour que le joueur commence à tomber
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
 
         // Placer la caméra en face du joueur pour montrer sa mort
         Vector3 targetPosition = player.position + cameraOffset;
