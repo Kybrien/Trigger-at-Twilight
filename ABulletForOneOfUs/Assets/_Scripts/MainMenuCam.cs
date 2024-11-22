@@ -11,6 +11,7 @@ public class MainMenuCam : MonoBehaviour
     public GameObject phantomBackground;
     public Camera mainMenuCamera; // Caméra du menu principal
     public GameObject player; // GameObject du joueur
+    public TimerController timerController;
 
     private bool transitioning = false;
 
@@ -77,6 +78,12 @@ public class MainMenuCam : MonoBehaviour
         if (player != null)
         {
             player.SetActive(true);
+        }
+
+        // Reset du timer ici
+        if (timerController != null)
+        {
+            timerController.ResetTimer();
         }
 
         transitioning = false;

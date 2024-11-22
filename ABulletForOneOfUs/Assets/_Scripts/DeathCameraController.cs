@@ -29,6 +29,15 @@ public class DeathCameraController : MonoBehaviour
     {
         playerController = FindObjectOfType<FirstPersonController>();
         gunController = FindObjectOfType<GunController>();
+        if (playerController != null )
+        {
+            Debug.Log("FPController not found");
+        }
+        if (gunController != null)
+        {
+            Debug.Log("GunController not found");
+        }
+
         if (gameOverText != null)
         {
             gameOverText.SetActive(false); // Masquer le texte de Game Over au début
@@ -37,19 +46,33 @@ public class DeathCameraController : MonoBehaviour
 
     public void TriggerDeathSequence()
     {
+        
         if (playerController != null)
         {
             playerController.enabled = false;
+            Debug.Log("PlayerController disabled");
         }
         if (gunController != null)
         {
             gunController.enabled = false;
+            Debug.Log("GunContr0ller disabled");
         }
         StartCoroutine(DeathSequence());
     }
 
     private IEnumerator DeathSequence()
     {
+        if (playerController != null)
+        {
+            playerController.enabled = false;
+            Debug.Log("PlayerController disabled");
+        }
+        if (gunController != null)
+        {
+            gunController.enabled = false;
+            Debug.Log("GunContr0ller disabled");
+        }
+
         // Trouver la référence au fantôme nouvellement instancié
         ghostAnimator = FindObjectOfType<GhostController>()?.GetComponent<Animator>();
         if (ghostAnimator == null)
