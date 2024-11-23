@@ -8,13 +8,25 @@ public class GhostManager : MonoBehaviour
     public string spawnableTag = "Spawnable";  // Tag des surfaces où le fantôme peut apparaître
     public GhostIndicatorUI ghostIndicatorUI; // Référence au script d'UI d'indicateur
 
+
+    public float initialSpawnDelay = 4f;  // Délai avant le premier spawn
+    public float respawnDelay = 3f;
+
+    private bool isGhostActive = false;
+
+    void Start()
+    {
+        // Lancer le premier spawn après un délai
+        Invoke(nameof(SpawnGhost), initialSpawnDelay);
+    }
+
     void Update()
     {
-        // Pour tester l'apparition avec une touche (par exemple, la touche G)
+        /*// Pour tester l'apparition avec une touche (par exemple, la touche G)
         if (Input.GetKeyDown(KeyCode.G))
         {
             SpawnGhost();
-        }
+        }*/
     }
 
     void SpawnGhost()
@@ -58,5 +70,12 @@ public class GhostManager : MonoBehaviour
 
             Debug.LogWarning("Impossible de trouver une surface appropriée pour faire apparaître le fantôme après plusieurs tentatives.");
         }
+    }
+
+    void HandleGhostDestroyed()
+    {
+        isGhostActive = false;
+        // Relancer le spawn après un délai
+        Invoke(nameof(SpawnGhost), respawnDelay);
     }
 }

@@ -11,6 +11,9 @@ public class GhostController : MonoBehaviour
     public Animator animator;
     private DeathCameraController deathCameraController;
 
+    public delegate void GhostDestroyedHandler();
+    public event GhostDestroyedHandler OnGhostDestroyed;
+
     void Start()
     {
         // Le fantôme commence désactivé
@@ -69,7 +72,7 @@ public class GhostController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
+        OnGhostDestroyed?.Invoke();
         isActive = false;
 
         GhostIndicatorUI ghostIndicator = FindObjectOfType<GhostIndicatorUI>();
