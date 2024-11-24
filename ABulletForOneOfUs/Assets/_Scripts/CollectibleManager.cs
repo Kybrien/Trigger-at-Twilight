@@ -17,6 +17,10 @@ public class CollectibleManager : MonoBehaviour
     public AudioClip winSound; // Son de victoire
     public AudioSource audioSource; // Source audio pour jouer le son
 
+    [Header("Camera and Player Settings")]
+    public GameObject player; // Le joueur à désactiver
+    public GameObject endingCamera; // Caméra ou GameObject à activer en cas de victoire
+
     private bool hasWon = false; // Indique si la victoire a déjà été atteinte
 
     void Awake()
@@ -40,6 +44,11 @@ public class CollectibleManager : MonoBehaviour
         if (winScreenCanvas != null)
         {
             winScreenCanvas.SetActive(false); // Masque l'écran de victoire au démarrage
+        }
+
+        if (endingCamera != null)
+        {
+            endingCamera.SetActive(false); // Assure que la caméra de fin est désactivée au démarrage
         }
     }
 
@@ -83,15 +92,20 @@ public class CollectibleManager : MonoBehaviour
         {
             winScreenCanvas.SetActive(true);
         }
+
+        // Activer la caméra de fin
+        if (endingCamera != null)
+        {
+            endingCamera.SetActive(true);
+        }
     }
 
     private void StopGame()
     {
-        // Désactiver les inputs du joueur
-        FirstPersonController playerController = FindObjectOfType<FirstPersonController>();
-        if (playerController != null)
+        // Désactiver le joueur
+        if (player != null)
         {
-            playerController.enabled = false;
+            player.SetActive(false);
         }
 
         // Arrêter les mécaniques liées au fantôme
@@ -101,7 +115,7 @@ public class CollectibleManager : MonoBehaviour
             CancelInvoke(); // Stop tous les Invoke
         }
 
-        // Optionnel : Arrêter le temps
-        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
