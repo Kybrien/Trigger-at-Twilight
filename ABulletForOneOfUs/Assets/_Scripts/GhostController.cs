@@ -16,7 +16,6 @@ public class GhostController : MonoBehaviour
 
     void Start()
     {
-        // Le fantôme commence désactivé
         gameObject.SetActive(true);
 
         deathCameraController = FindObjectOfType<DeathCameraController>();
@@ -28,23 +27,24 @@ public class GhostController : MonoBehaviour
 
     public void Spawn(Vector3 spawnPosition)
     {
-        // Assurer que le fantôme est actif
         gameObject.SetActive(true);
         transform.position = spawnPosition;
         isActive = true;
 
-        // Lancer le timer pour que le fantôme tue le joueur s'il n'est pas détruit
-        Invoke("GhostAttack", ghostLifetime);
+        // Lancer le timer pour tuer le joueur
+        Invoke(nameof(GhostAttack), ghostLifetime);
     }
 
     void Update()
     {
         if (isActive)
         {
-            // Faire face au joueur
-            Transform playerTransform = Camera.main.transform;
-            Vector3 lookDirection = new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z);
-            transform.LookAt(lookDirection);
+            if (Camera.main != null)
+            {
+                Transform playerTransform = Camera.main.transform;
+                Vector3 lookDirection = new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z);
+                transform.LookAt(lookDirection);
+            }
         }
     }
 
@@ -53,11 +53,7 @@ public class GhostController : MonoBehaviour
         if (isActive)
         {
             Debug.Log("Le fantôme a tué le joueur !");
-
-            if (deathCameraController != null)
-            {
-                deathCameraController.TriggerDeathSequence();
-            }
+            deathCameraController?.TriggerDeathSequence();
         }
     }
 
@@ -66,12 +62,14 @@ public class GhostController : MonoBehaviour
         if (animator != null)
         {
             animator.SetBool("isDead", true);
-            StartCoroutine(DestroyAfterAnimation()); // Attendre la fin de l'animation de mort avant de détruire
+            StartCoroutine(DestroyAfterAnimation());
         }
         else
         {
             Destroy(gameObject);
         }
+
+        // Notifier les abonnés que le fantôme a été détruit
         OnGhostDestroyed?.Invoke();
         isActive = false;
 
@@ -86,16 +84,14 @@ public class GhostController : MonoBehaviour
     {
         if (animator != null)
         {
-            // Attendre que l'animation courante soit terminée
             AnimatorStateInfo currentState;
             do
             {
                 yield return null;
                 currentState = animator.GetCurrentAnimatorStateInfo(0);
-            } while (currentState.normalizedTime < 2.0f);
+            } while (currentState.normalizedTime < 1.0f);
         }
 
-        // Détruire le fantôme après la fin de l'animation
         Destroy(gameObject);
     }
 }

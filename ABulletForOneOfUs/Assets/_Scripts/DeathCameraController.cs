@@ -22,18 +22,16 @@ public class DeathCameraController : MonoBehaviour
     public AudioSource audioSource; // Source audio pour jouer les sons
 
     private Animator ghostAnimator; // Référence à l'Animator du fantôme
-    private FirstPersonController playerController;
-    private GunController gunController;
+    public FirstPersonController playerController;
+    public GunController gunController;
 
     void Start()
     {
-        playerController = FindObjectOfType<FirstPersonController>();
-        gunController = FindObjectOfType<GunController>();
-        if (playerController != null )
+        if (playerController == null )
         {
             Debug.Log("FPController not found");
         }
-        if (gunController != null)
+        if (gunController == null)
         {
             Debug.Log("GunController not found");
         }

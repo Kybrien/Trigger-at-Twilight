@@ -6,22 +6,23 @@ public class MainMenuCam : MonoBehaviour
     [Header("Camera Transition Settings")]
     public Transform playerTransform; // La référence au joueur
     public Transform menuPosition; // La position initiale de la caméra pour le menu principal
-    public GameObject mainMenuUI; // UI du menu principal à désactiver après avoir cliqué sur "Play"
+    public GameObject mainMenuUI; // UI du menu principal
     public float transitionDuration = 3f; // Durée de la transition vers le joueur
     public GameObject phantomBackground;
     public Camera mainMenuCamera; // Caméra du menu principal
     public GameObject player; // GameObject du joueur
     public TimerController timerController;
+    public GhostManager ghostManager;
 
     private bool transitioning = false;
 
     void Start()
     {
-        // Assurer que la caméra commence à la position du menu
+        // Positionner la caméra pour le menu principal
         transform.position = menuPosition.position;
         transform.rotation = menuPosition.rotation;
 
-        // Assurer que le joueur est désactivé au début
+        // Désactiver le joueur au démarrage
         if (player != null)
         {
             player.SetActive(false);
@@ -33,9 +34,20 @@ public class MainMenuCam : MonoBehaviour
         if (!transitioning)
         {
             StartCoroutine(TransitionToPlayer());
+
             if (phantomBackground != null)
             {
                 phantomBackground.SetActive(false);
+            }
+
+            // Lancer le spawn des fantômes
+            if (ghostManager != null)
+            {
+                ghostManager.InitializeGhostSpawning();
+            }
+            else
+            {
+                Debug.LogError("GhostManager non assigné !");
             }
         }
     }
@@ -53,7 +65,7 @@ public class MainMenuCam : MonoBehaviour
         Vector3 startPosition = transform.position;
         Quaternion startRotation = transform.rotation;
 
-        Vector3 endPosition = playerTransform.position + new Vector3(0, 2, -4); // Ajuster l'offset pour être derrière le joueur
+        Vector3 endPosition = playerTransform.position + new Vector3(0, 2, -4);
         Quaternion endRotation = Quaternion.LookRotation(playerTransform.position - transform.position);
 
         float elapsedTime = 0f;
@@ -66,11 +78,10 @@ public class MainMenuCam : MonoBehaviour
             yield return null;
         }
 
-        // Assurer que la caméra soit exactement à la position finale
         transform.position = endPosition;
         transform.rotation = endRotation;
 
-        // Désactiver la caméra du menu principal et activer le joueur
+        // Activer le joueur
         if (mainMenuCamera != null)
         {
             mainMenuCamera.gameObject.SetActive(false);
@@ -80,7 +91,7 @@ public class MainMenuCam : MonoBehaviour
             player.SetActive(true);
         }
 
-        // Reset du timer ici
+        // Reset du timer
         if (timerController != null)
         {
             timerController.ResetTimer();

@@ -26170,6 +26170,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &680635556 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8209349846462940378, guid: 4d309c4d2f4ac854494cea8ec81e5c25, type: 3}
+  m_PrefabInstance: {fileID: 978856545}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584583473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d90ba6530d9bfda47abb4610956b2f44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &681286044 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4871459181783178, guid: a10c6a38a5988d946909e1b71756d65f, type: 3}
@@ -29984,6 +29995,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf7e228c4f7559445b61d3f1f4207327, type: 3}
+--- !u!114 &768095196 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7245573982807441692, guid: 4d309c4d2f4ac854494cea8ec81e5c25, type: 3}
+  m_PrefabInstance: {fileID: 978856545}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 377f7cb2aac37384996d0b45b3350e30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &769931088
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33244,6 +33266,8 @@ MonoBehaviour:
   gameOverText: {fileID: 1775801177}
   deathSound: {fileID: 8300000, guid: 2ada4a91507ac434aa3bfea276d3a90b, type: 3}
   audioSource: {fileID: 680635554}
+  playerController: {fileID: 680635556}
+  gunController: {fileID: 768095196}
 --- !u!1001 &842732925
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38629,6 +38653,7 @@ MonoBehaviour:
   mainMenuCamera: {fileID: 966249042}
   player: {fileID: 584583473}
   timerController: {fileID: 1170010646}
+  ghostManager: {fileID: 1305030904}
 --- !u!4 &966572319 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4163020846523182, guid: 04c852aad9fc0b44f9d3e1319fdbfd09, type: 3}
@@ -53172,7 +53197,7 @@ MonoBehaviour:
   spawnableTag: Spawnable
   ghostIndicatorUI: {fileID: 1411334318}
   initialSpawnDelay: 4
-  respawnDelay: 3
+  respawnDelayRange: {x: 4, y: 6}
 --- !u!4 &1305030905
 Transform:
   m_ObjectHideFlags: 0
