@@ -2,14 +2,18 @@ using UnityEngine;
 
 public class GhostManager : MonoBehaviour
 {
-    public GameObject ghostPrefab;  // Le préfab du fantôme
-    public Transform playerTransform;  // Référence au joueur
-    public float spawnRadius = 30f;  // Rayon pour le spawn autour du joueur
-    public string spawnableTag = "Spawnable";  // Tag des surfaces où le fantôme peut apparaître
+    public GameObject ghostPrefab; // Le prefab du fantôme
+    public Transform playerTransform; // Référence au joueur
+    public float spawnRadius = 30f; // Rayon pour le spawn autour du joueur
+    public string spawnableTag = "Spawnable"; // Tag des surfaces où le fantôme peut apparaître
     public GhostIndicatorUI ghostIndicatorUI; // Référence au script d'UI d'indicateur
 
-    public float initialSpawnDelay = 4f;  // Délai avant le premier spawn
-    public Vector2 respawnDelayRange = new Vector2(4f, 6f);  // Plage de temps pour le respawn
+    [Header("Spawn Sounds")]
+    public AudioClip[] spawnSounds; // Tableau de sons à jouer au spawn
+    public AudioSource audioSource; // Source audio pour jouer les sons
+
+    public float initialSpawnDelay = 4f; // Délai avant le premier spawn
+    public float respawnDelay = 3f; // Délai entre les spawns
 
     private bool isGhostActive = false;
 
@@ -35,6 +39,7 @@ public class GhostManager : MonoBehaviour
                         Vector3 finalSpawnPosition = hit.point;
                         GameObject ghostInstance = Instantiate(ghostPrefab, finalSpawnPosition, Quaternion.identity);
 
+                        // Mettre à jour la référence dans GhostIndicatorUI
                         if (ghostIndicatorUI != null)
                         {
                             ghostIndicatorUI.ghostTransform = ghostInstance.transform;
@@ -44,8 +49,11 @@ public class GhostManager : MonoBehaviour
                         if (ghostController != null)
                         {
                             ghostController.Spawn(finalSpawnPosition);
-                            ghostController.OnGhostDestroyed += HandleGhostDestroyed; // Écouter l'événement
+                            ghostController.OnGhostDestroyed += HandleGhostDestroyed;
                         }
+
+                        // Jouer un son aléatoire au spawn
+                        PlaySpawnSound();
 
                         return;
                     }
@@ -56,12 +64,20 @@ public class GhostManager : MonoBehaviour
         }
     }
 
+    private void PlaySpawnSound()
+    {
+        if (spawnSounds.Length > 0 && audioSource != null)
+        {
+            // Choisir un son aléatoire
+            AudioClip randomClip = spawnSounds[Random.Range(0, spawnSounds.Length)];
+            audioSource.PlayOneShot(randomClip);
+        }
+    }
+
     void HandleGhostDestroyed()
     {
         isGhostActive = false;
-
-        // Planifie un nouveau spawn avec un délai aléatoire
-        float randomRespawnDelay = Random.Range(respawnDelayRange.x, respawnDelayRange.y);
-        Invoke(nameof(SpawnGhost), randomRespawnDelay);
+        // Relancer le spawn après un délai
+        Invoke(nameof(SpawnGhost), respawnDelay);
     }
 }

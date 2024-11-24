@@ -221,6 +221,7 @@ GameObject:
   - component: {fileID: 4316347369109500624}
   - component: {fileID: 4635124818650082779}
   - component: {fileID: 9163720040931352532}
+  - component: {fileID: 3003106266164352790}
   m_Layer: 0
   m_Name: ProgressBar
   m_TagString: Untagged
@@ -267,7 +268,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -312,6 +313,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &3003106266164352790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4959484450577094579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c142b85d6be6a84194014e6c2c5f6c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5768957002635088195
 GameObject:
   m_ObjectHideFlags: 0

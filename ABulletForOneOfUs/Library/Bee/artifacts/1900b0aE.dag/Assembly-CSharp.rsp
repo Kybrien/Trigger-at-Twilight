@@ -397,6 +397,7 @@
 "Assets/_Scripts/Character/HealthComponent.cs"
 "Assets/_Scripts/CollectibleManager.cs"
 "Assets/_Scripts/DeathCameraController.cs"
+"Assets/_Scripts/FaceCamera.cs"
 "Assets/_Scripts/GhostController.cs"
 "Assets/_Scripts/GhostIndicativUI.cs"
 "Assets/_Scripts/GhostManager.cs"
