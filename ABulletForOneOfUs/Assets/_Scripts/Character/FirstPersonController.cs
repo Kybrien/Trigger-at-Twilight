@@ -451,10 +451,10 @@ public class FirstPersonController : MonoBehaviour
                     animator.SetBool("isRunning", false); // Désactive l'animation de course
                 }*/
 
-                if (hideBarWhenFull && sprintRemaining == sprintDuration)
+                /*if (hideBarWhenFull && sprintRemaining == sprintDuration)
                 {
                     sprintBarCG.alpha -= 3 * Time.deltaTime;
-                }
+                }*/
 
                 targetVelocity = transform.TransformDirection(targetVelocity) * walkSpeed;
 

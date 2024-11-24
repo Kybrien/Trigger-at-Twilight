@@ -102,32 +102,7 @@ public class DeathCameraController : MonoBehaviour
             audioSource.PlayOneShot(deathSound);
         }
 
-        // Attendre un instant pour que l'animation commence
-        yield return new WaitForSeconds(0.5f);
-
-        // Déplacer la caméra vers le joueur pour montrer sa mort
-        Vector3 targetPosition = player.position + new Vector3(0, 2, -3);
-        Quaternion targetRotation = Quaternion.LookRotation(player.position - cameraTransform.position);
-
-        float elapsedTime = 0f;
-        Vector3 startPosition = cameraTransform.position;
-        Quaternion startRotation = cameraTransform.rotation;
-
-        while (elapsedTime < transitionDuration)
-        {
-            cameraTransform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / transitionDuration);
-            cameraTransform.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / transitionDuration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        cameraTransform.position = targetPosition;
-        cameraTransform.rotation = targetRotation;
-
-        // Attendre un instant avant de passer à la vue sur le fantôme
-        yield return new WaitForSeconds(1f);
-
-        // Passer à la vue sur le fantôme
+        // Passer directement à la vue sur le fantôme
         Transform cameraFocusPoint = ghost.Find("CameraFocusPoint");
         if (cameraFocusPoint != null)
         {
@@ -135,9 +110,9 @@ public class DeathCameraController : MonoBehaviour
             Vector3 lookAtPoint = ghost.position + Vector3.up * 1.5f;
             Quaternion ghostTargetRotation = Quaternion.LookRotation(lookAtPoint - ghostTargetPosition);
 
-            elapsedTime = 0f;
-            startPosition = cameraTransform.position;
-            startRotation = cameraTransform.rotation;
+            float elapsedTime = 0f;
+            Vector3 startPosition = cameraTransform.position;
+            Quaternion startRotation = cameraTransform.rotation;
 
             while (elapsedTime < transitionDuration)
             {
