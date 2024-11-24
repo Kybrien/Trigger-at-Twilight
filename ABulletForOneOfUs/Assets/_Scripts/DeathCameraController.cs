@@ -171,5 +171,13 @@ public class DeathCameraController : MonoBehaviour
         {
             endScreen.SetActive(true);
         }
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void OnRetryButtonClicked()
+    {
+        // Redémarre la scène actuelle
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
     }
 }
