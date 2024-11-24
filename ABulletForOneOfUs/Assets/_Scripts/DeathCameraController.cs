@@ -4,10 +4,9 @@ using System.Collections;
 public class DeathCameraController : MonoBehaviour
 {
     [Header("Camera Settings")]
-    public Transform player; // La référence au joueur
-    public Transform cameraTransform; // La caméra principale ou une caméra dédiée aux cinématiques
+    public Transform player; // Référence au joueur
+    public Transform cameraTransform; // La caméra principale ou une caméra dédiée
     public float transitionDuration = 2f; // Durée de la transition de la caméra
-    public Vector3 cameraOffset; // Offset pour la position de la caméra en vue TPS
 
     [Header("Animation Settings")]
     public Animator playerAnimator; // Animations du joueur
@@ -22,20 +21,11 @@ public class DeathCameraController : MonoBehaviour
     public AudioSource audioSource; // Source audio pour jouer les sons
 
     private Animator ghostAnimator; // Référence à l'Animator du fantôme
-    public FirstPersonController playerController;
-    public GunController gunController;
+    public FirstPersonController playerController; // Contrôle du joueur
+    public GunController gunController; // Contrôle du pistolet
 
     void Start()
     {
-        if (playerController == null )
-        {
-            Debug.Log("FPController not found");
-        }
-        if (gunController == null)
-        {
-            Debug.Log("GunController not found");
-        }
-
         if (gameOverText != null)
         {
             gameOverText.SetActive(false); // Masquer le texte de Game Over au début
@@ -44,40 +34,27 @@ public class DeathCameraController : MonoBehaviour
 
     public void TriggerDeathSequence()
     {
-        
         if (playerController != null)
         {
             playerController.enabled = false;
-            Debug.Log("PlayerController disabled");
         }
         if (gunController != null)
         {
             gunController.enabled = false;
-            Debug.Log("GunContr0ller disabled");
         }
         StartCoroutine(DeathSequence());
     }
 
     private IEnumerator DeathSequence()
     {
-        if (playerController != null)
-        {
-            playerController.enabled = false;
-            Debug.Log("PlayerController disabled");
-        }
-        if (gunController != null)
-        {
-            gunController.enabled = false;
-            Debug.Log("GunContr0ller disabled");
-        }
-
-        // Trouver la référence au fantôme nouvellement instancié
+        // Trouver la référence au fantôme
         ghostAnimator = FindObjectOfType<GhostController>()?.GetComponent<Animator>();
         if (ghostAnimator == null)
         {
             Debug.LogWarning("Fantôme introuvable. Assurez-vous qu'un fantôme est instancié.");
             yield break;
         }
+
         Transform ghost = ghostAnimator.transform;
 
         // Jouer l'animation de mort du joueur
@@ -92,18 +69,17 @@ public class DeathCameraController : MonoBehaviour
             audioSource.PlayOneShot(deathSound);
         }
 
-        // Attendre un instant pour que le joueur commence à tomber
-        yield return new WaitForSeconds(0.2f);
+        // Attendre un instant pour que l'animation commence
+        yield return new WaitForSeconds(0.5f);
 
-        // Placer la caméra en face du joueur pour montrer sa mort
-        Vector3 targetPosition = player.position + cameraOffset;
+        // Déplacer la caméra vers le joueur pour montrer sa mort
+        Vector3 targetPosition = player.position + new Vector3(0, 2, -3); // Position derrière et légèrement au-dessus du joueur
         Quaternion targetRotation = Quaternion.LookRotation(player.position - cameraTransform.position);
 
         float elapsedTime = 0f;
         Vector3 startPosition = cameraTransform.position;
         Quaternion startRotation = cameraTransform.rotation;
 
-        // Lissage de la transition de la caméra vers la position du joueur
         while (elapsedTime < transitionDuration)
         {
             cameraTransform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / transitionDuration);
@@ -115,20 +91,21 @@ public class DeathCameraController : MonoBehaviour
         cameraTransform.position = targetPosition;
         cameraTransform.rotation = targetRotation;
 
-        // Attendre un instant pour regarder le joueur tomber
+        // Attendre un instant avant de passer à la vue sur le fantôme
         yield return new WaitForSeconds(1f);
 
         // Passer à la vue sur le fantôme
-        if (ghost != null)
+        Transform cameraFocusPoint = ghost.Find("CameraFocusPoint");
+        if (cameraFocusPoint != null)
         {
-            Vector3 ghostTargetPosition = ghost.position + cameraOffset;
-            Quaternion ghostTargetRotation = Quaternion.LookRotation(ghost.position - cameraTransform.position);
+            Vector3 ghostTargetPosition = cameraFocusPoint.position;
+            Vector3 lookAtPoint = ghost.position + Vector3.up * 1.5f; // 1.5f correspond à une hauteur typique au niveau de la tête
+            Quaternion ghostTargetRotation = Quaternion.LookRotation(lookAtPoint - ghostTargetPosition);
 
             elapsedTime = 0f;
             startPosition = cameraTransform.position;
             startRotation = cameraTransform.rotation;
 
-            // Transition de la caméra vers la vue sur le fantôme
             while (elapsedTime < transitionDuration)
             {
                 cameraTransform.position = Vector3.Lerp(startPosition, ghostTargetPosition, elapsedTime / transitionDuration);
@@ -140,12 +117,16 @@ public class DeathCameraController : MonoBehaviour
             cameraTransform.position = ghostTargetPosition;
             cameraTransform.rotation = ghostTargetRotation;
 
-            // Choisir aléatoirement une animation de danse pour le fantôme
+            // Jouer une animation de danse pour le fantôme
             if (ghostAnimator != null)
             {
                 int randomIndex = Random.Range(0, ghostDanceAnimations.Length);
                 ghostAnimator.SetTrigger(ghostDanceAnimations[randomIndex]);
             }
+        }
+        else
+        {
+            Debug.LogWarning("CameraFocusPoint introuvable sur le fantôme.");
         }
 
         // Afficher le texte "Game Over"

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6740961927141879381
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6964385580728915373}
+  m_Layer: 0
+  m_Name: CameraFocusPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6964385580728915373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6740961927141879381}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.23389377, y: -0.94866115, z: -0.008344797, w: 0.2127582}
+  m_LocalPosition: {x: 1.4, y: 2.77, z: 2.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2576899823152535279}
+  m_LocalEulerAnglesHint: {x: -6.624, y: -156.268, z: 26.307}
 --- !u!1001 &502679347793971218
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -165,6 +196,9 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3e746db1963f28e4da0980416a903f3b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6964385580728915373}
     - targetCorrespondingSourceObject: {fileID: -7192024718754395788, guid: 3e746db1963f28e4da0980416a903f3b, type: 3}
       insertIndex: 0
       addedObject: {fileID: 5685073784584342657}
@@ -188,6 +222,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 731778158845106393}
   m_SourcePrefab: {fileID: 100100000, guid: 3e746db1963f28e4da0980416a903f3b, type: 3}
+--- !u!4 &2576899823152535279 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3e746db1963f28e4da0980416a903f3b, type: 3}
+  m_PrefabInstance: {fileID: 2614416279095439620}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2920914284558306389 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3e746db1963f28e4da0980416a903f3b, type: 3}
