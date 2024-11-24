@@ -325,6 +325,7 @@ GameObject:
   - component: {fileID: 5114723414803999731}
   - component: {fileID: 4584941583046117932}
   - component: {fileID: 3276336940437293553}
+  - component: {fileID: 8503004341191742651}
   m_Layer: 0
   m_Name: PUMPKIN
   m_TagString: Untagged
@@ -435,7 +436,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionTime: 2
   interactionKey: 101
-  progressIndicator: {fileID: 0}
+  interactionLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  progressIndicator: {fileID: 5317032915487557381}
+--- !u!135 &8503004341191742651
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5768957002635088195}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 2
+  m_Center: {x: 0, y: 0.22122774, z: 0.000000014901167}
 --- !u!1 &8839342024909870696
 GameObject:
   m_ObjectHideFlags: 0

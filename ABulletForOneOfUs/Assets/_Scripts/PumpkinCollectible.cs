@@ -6,33 +6,59 @@ public class PumpkinCollectible : MonoBehaviour
     [Header("Interaction Settings")]
     public float interactionTime = 2f; // Temps nécessaire pour interagir
     public KeyCode interactionKey = KeyCode.E; // Touche pour interagir
+    public LayerMask interactionLayer; // Couches à considérer pour le raycast
 
     [Header("Visual Feedback")]
     public Image progressIndicator; // Référence à l'image de progression
 
     private float interactionProgress = 0f; // Temps écoulé pendant l'interaction
-    private bool isInteracting = false; // Indique si l'interaction est en cours
+    private bool isLookingAt = false; // Indique si le joueur regarde la citrouille
+    private Camera activeCamera; // Référence à la caméra active
+
+    void Start()
+    {
+        if (progressIndicator != null)
+        {
+            progressIndicator.gameObject.SetActive(false); // Désactive l'indicateur au démarrage
+        }
+    }
 
     void Update()
     {
-        // Vérifier si le joueur interagit avec la citrouille
-        if (isInteracting)
+        // Vérifier dynamiquement si la caméra active est disponible
+        if (activeCamera == null)
         {
-            if (Input.GetKey(interactionKey))
+            activeCamera = Camera.main;
+            if (activeCamera == null) return; // Si aucune caméra n'est active, sortir de la méthode
+        }
+
+        // Vérifier si le joueur regarde la citrouille
+        Ray ray = activeCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, 10f, interactionLayer))
+        {
+            if (hit.collider.gameObject == gameObject)
             {
-                interactionProgress += Time.deltaTime;
+                isLookingAt = true;
 
-                // Mettre à jour l'indicateur visuel
-                if (progressIndicator != null)
+                // Détecter l’interaction
+                if (Input.GetKey(interactionKey))
                 {
-                    progressIndicator.fillAmount = interactionProgress / interactionTime;
+                    interactionProgress += Time.deltaTime;
+
+                    if (progressIndicator != null)
+                    {
+                        progressIndicator.fillAmount = interactionProgress / interactionTime;
+                        progressIndicator.gameObject.SetActive(true);
+                    }
+
+                    if (interactionProgress >= interactionTime)
+                    {
+                        Collect();
+                    }
                 }
-
-                // Vérifier si l'interaction est terminée
-                if (interactionProgress >= interactionTime)
+                else
                 {
-                    Debug.Log("Citrouille collectee");
-                    Collect();
+                    ResetInteraction();
                 }
             }
             else
@@ -40,28 +66,7 @@ public class PumpkinCollectible : MonoBehaviour
                 ResetInteraction();
             }
         }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        // Vérifie si le joueur entre dans la zone d'interaction
-        if (other.CompareTag("Player"))
-        {
-            isInteracting = true;
-
-            // Activer l'indicateur visuel
-            if (progressIndicator != null)
-            {
-                progressIndicator.gameObject.SetActive(true);
-                progressIndicator.fillAmount = 0f; // Réinitialiser le remplissage
-            }
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        // Vérifie si le joueur sort de la zone d'interaction
-        if (other.CompareTag("Player"))
+        else
         {
             ResetInteraction();
         }
@@ -69,22 +74,22 @@ public class PumpkinCollectible : MonoBehaviour
 
     private void ResetInteraction()
     {
-        isInteracting = false;
+        isLookingAt = false;
         interactionProgress = 0f;
 
-        // Désactiver l'indicateur visuel
         if (progressIndicator != null)
         {
+            progressIndicator.fillAmount = 0f;
             progressIndicator.gameObject.SetActive(false);
         }
     }
 
     private void Collect()
     {
-        // Notifie le CollectibleManager que la citrouille a été collectée
+        Debug.Log("Pumpkin collected!");
+
         CollectibleManager.Instance.CollectPumpkin();
 
-        // Détruire la citrouille
         Destroy(gameObject);
     }
 }
