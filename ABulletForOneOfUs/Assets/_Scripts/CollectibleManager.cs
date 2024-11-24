@@ -3,11 +3,11 @@ using TMPro;
 
 public class CollectibleManager : MonoBehaviour
 {
-    public static CollectibleManager Instance; // Instance Singleton
+    public static CollectibleManager Instance; // Singleton pour un accès global
 
     [Header("UI Settings")]
-    public TextMeshProUGUI pumpkinCounterText; // Référence au TextMeshPro pour afficher le compteur
-    public Canvas winCanvas; // Canvas à afficher à la victoire
+    public TextMeshProUGUI pumpkinCounterText; // Texte qui affiche le compteur des citrouilles
+    public GameObject winScreenCanvas; // Canvas affiché en cas de victoire
 
     [Header("Game Settings")]
     public int totalPumpkins = 5; // Nombre total de citrouilles à collecter
@@ -15,13 +15,13 @@ public class CollectibleManager : MonoBehaviour
 
     [Header("Audio Settings")]
     public AudioClip winSound; // Son de victoire
-    public AudioSource audioSource; // Source audio pour jouer les sons
+    public AudioSource audioSource; // Source audio pour jouer le son
 
-    private bool hasWon = false; // Indique si la condition de victoire est atteinte
+    private bool hasWon = false; // Indique si la victoire a déjà été atteinte
 
     void Awake()
     {
-        // Singleton pour un accès global
+        // Configuration du Singleton
         if (Instance == null)
         {
             Instance = this;
@@ -34,24 +34,23 @@ public class CollectibleManager : MonoBehaviour
 
     void Start()
     {
-        UpdateUI(); // Initialiser l'UI au démarrage
+        // Initialisation de l'UI et des éléments liés à la victoire
+        UpdateUI();
 
-        if (winCanvas != null)
+        if (winScreenCanvas != null)
         {
-            winCanvas.gameObject.SetActive(false); // Masquer le canvas de victoire au départ
+            winScreenCanvas.SetActive(false); // Masque l'écran de victoire au démarrage
         }
     }
 
     public void CollectPumpkin()
     {
-        if (hasWon) return; // Si la victoire est déjà atteinte, ne rien faire
+        if (hasWon) return; // Ne rien faire si la victoire a déjà été atteinte
 
         collectedPumpkins++;
-
-        // Mettre à jour l'UI
         UpdateUI();
 
-        // Vérifier si toutes les citrouilles ont été collectées
+        // Vérifie si toutes les citrouilles ont été collectées
         if (collectedPumpkins >= totalPumpkins)
         {
             TriggerWinCondition();
@@ -62,7 +61,7 @@ public class CollectibleManager : MonoBehaviour
     {
         if (pumpkinCounterText != null)
         {
-            pumpkinCounterText.text = $"{collectedPumpkins}";
+            pumpkinCounterText.text = $"{collectedPumpkins}/{totalPumpkins} Pumpkins Collected";
         }
     }
 
@@ -70,8 +69,8 @@ public class CollectibleManager : MonoBehaviour
     {
         hasWon = true;
 
-        // Désactiver tous les autres Canvas
-        DisableAllCanvases();
+        // Arrêter le jeu et désactiver les mécaniques
+        StopGame();
 
         // Jouer le son de victoire
         if (audioSource != null && winSound != null)
@@ -79,25 +78,10 @@ public class CollectibleManager : MonoBehaviour
             audioSource.PlayOneShot(winSound);
         }
 
-        // Afficher le Canvas de victoire
-        if (winCanvas != null)
+        // Afficher le canvas de victoire
+        if (winScreenCanvas != null)
         {
-            winCanvas.gameObject.SetActive(true);
-        }
-
-        // Désactiver les mécaniques de jeu
-        StopGame();
-    }
-
-    private void DisableAllCanvases()
-    {
-        Canvas[] canvases = FindObjectsOfType<Canvas>();
-        foreach (Canvas canvas in canvases)
-        {
-            if (canvas != winCanvas)
-            {
-                canvas.gameObject.SetActive(false);
-            }
+            winScreenCanvas.SetActive(true);
         }
     }
 
@@ -110,14 +94,14 @@ public class CollectibleManager : MonoBehaviour
             playerController.enabled = false;
         }
 
-        // Arrêter les timers et le spawn du fantôme
+        // Arrêter les mécaniques liées au fantôme
         GhostManager ghostManager = FindObjectOfType<GhostManager>();
         if (ghostManager != null)
         {
-            CancelInvoke(); // Annule tous les Invoke en cours
+            CancelInvoke(); // Stop tous les Invoke
         }
 
-        // Désactiver tout comportement lié au joueur
-        Time.timeScale = 0f; // Optionnel : Arrêter le temps
+        // Optionnel : Arrêter le temps
+        Time.timeScale = 0f;
     }
 }

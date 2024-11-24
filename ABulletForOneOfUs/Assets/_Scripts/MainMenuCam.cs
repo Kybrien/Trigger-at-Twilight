@@ -99,4 +99,15 @@ public class MainMenuCam : MonoBehaviour
 
         transitioning = false;
     }
+
+    public void OnQuitButtonClicked()
+    {
+        // Si on est en mode éditeur, arrête la lecture du jeu
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        // Quitter le jeu dans une version construite
+        Application.Quit();
+#endif
+    }
 }
