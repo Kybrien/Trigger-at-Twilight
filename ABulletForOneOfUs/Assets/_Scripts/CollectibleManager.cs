@@ -70,7 +70,7 @@ public class CollectibleManager : MonoBehaviour
     {
         if (pumpkinCounterText != null)
         {
-            pumpkinCounterText.text = $"{collectedPumpkins}/{totalPumpkins} Pumpkins Collected";
+            pumpkinCounterText.text = $"{collectedPumpkins}";
         }
     }
 
