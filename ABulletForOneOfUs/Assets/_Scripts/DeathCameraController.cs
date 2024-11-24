@@ -15,6 +15,8 @@ public class DeathCameraController : MonoBehaviour
 
     [Header("UI Settings")]
     public GameObject gameOverText; // Texte "Game Over" à afficher
+    public GameObject playerUI; // Référence au Canvas principal de l'UI
+    public GameObject endScreen; // Référence au GameObject "EndScreen"
 
     [Header("Sound Settings")]
     public AudioClip deathSound; // Son à jouer lorsque le joueur meurt
@@ -30,6 +32,16 @@ public class DeathCameraController : MonoBehaviour
         {
             gameOverText.SetActive(false); // Masquer le texte de Game Over au début
         }
+
+        if (playerUI != null)
+        {
+            playerUI.SetActive(true); // Assurer que l'UI du joueur est activée au départ
+        }
+
+        if (endScreen != null)
+        {
+            endScreen.SetActive(false); // Masquer l'écran de fin au départ
+        }
     }
 
     public void TriggerDeathSequence()
@@ -42,7 +54,28 @@ public class DeathCameraController : MonoBehaviour
         {
             gunController.enabled = false;
         }
+
+        // Désactiver tous les enfants sauf EndScreen
+        if (playerUI != null && endScreen != null)
+        {
+            DisableAllExceptEndScreen(playerUI, endScreen);
+        }
+
         StartCoroutine(DeathSequence());
+    }
+
+    private void DisableAllExceptEndScreen(GameObject canvas, GameObject exception)
+    {
+        foreach (Transform child in canvas.transform)
+        {
+            if (child.gameObject != exception)
+            {
+                child.gameObject.SetActive(false); // Désactiver tout sauf le GameObject d'exception
+            }
+        }
+
+        // Masquer l'EndScreen ici, il sera activé plus tard
+        exception.SetActive(false);
     }
 
     private IEnumerator DeathSequence()
@@ -73,7 +106,7 @@ public class DeathCameraController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         // Déplacer la caméra vers le joueur pour montrer sa mort
-        Vector3 targetPosition = player.position + new Vector3(0, 2, -3); // Position derrière et légèrement au-dessus du joueur
+        Vector3 targetPosition = player.position + new Vector3(0, 2, -3);
         Quaternion targetRotation = Quaternion.LookRotation(player.position - cameraTransform.position);
 
         float elapsedTime = 0f;
@@ -99,7 +132,7 @@ public class DeathCameraController : MonoBehaviour
         if (cameraFocusPoint != null)
         {
             Vector3 ghostTargetPosition = cameraFocusPoint.position;
-            Vector3 lookAtPoint = ghost.position + Vector3.up * 1.5f; // 1.5f correspond à une hauteur typique au niveau de la tête
+            Vector3 lookAtPoint = ghost.position + Vector3.up * 1.5f;
             Quaternion ghostTargetRotation = Quaternion.LookRotation(lookAtPoint - ghostTargetPosition);
 
             elapsedTime = 0f;
@@ -129,10 +162,14 @@ public class DeathCameraController : MonoBehaviour
             Debug.LogWarning("CameraFocusPoint introuvable sur le fantôme.");
         }
 
-        // Afficher le texte "Game Over"
+        // Afficher le texte "Game Over" et l'EndScreen en même temps
         if (gameOverText != null)
         {
             gameOverText.SetActive(true);
+        }
+        if (endScreen != null)
+        {
+            endScreen.SetActive(true);
         }
     }
 }
