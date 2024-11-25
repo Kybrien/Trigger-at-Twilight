@@ -35,10 +35,10 @@ public class MainMenuCam : MonoBehaviour
         {
             StartCoroutine(TransitionToPlayer());
 
-            if (phantomBackground != null)
+            /*if (phantomBackground != null)
             {
                 phantomBackground.SetActive(false);
-            }
+            }*/
 
             // Lancer le spawn des fantômes
             if (ghostManager != null)
@@ -80,6 +80,12 @@ public class MainMenuCam : MonoBehaviour
 
         transform.position = endPosition;
         transform.rotation = endRotation;
+
+        if (phantomBackground != null)
+        {
+            phantomBackground.SetActive(false);
+        }
+
 
         // Activer le joueur
         if (mainMenuCamera != null)
