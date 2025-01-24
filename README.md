@@ -1,4 +1,5 @@
 # Trigger At Twilight
+### Novembre 2024 (5 jours)
 
 Plonge dans un monde mystérieux où la brume envahit une carte semi-ouverte, et où chaque coin sombre cache une menace surnaturelle. Armé d’un simple revolver, ta mission est retrouver 5 citrouilles dispersées sur la carte tout en te confrontant à un fantôme redoutable.   
 
