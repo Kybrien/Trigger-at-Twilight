@@ -4,8 +4,8 @@ Plonge dans un monde mystérieux où la brume envahit une carte semi-ouverte, et
 
 Le fantôme ne te laisse aucun répit : à chaque apparition, tu as 4 précieuses secondes pour le repérer, viser et tirer. Si tu échoues... c’est la fin. Chaque choix compte, chaque balle est cruciale, et chaque seconde te rapproche de ta survie… ou de ta perte.   
 
-![Screen 1](./Screenshots/TAT1.PNG)
-![Screen 1](./Screenshots/TAT2.PNG)
-![Screen 1](./Screenshots/TAT3.PNG)
-![Screen 1](./Screenshots/TAT4.PNG)
-![Screen 1](./Screenshots/TAT5.PNG)
+![Screen 1](./ABulletForOneOfUs/Screenshots/TAT1.PNG)
+![Screen 1](./ABulletForOneOfUs/Screenshots/TAT2.PNG)
+![Screen 1](./ABulletForOneOfUs/Screenshots/TAT3.PNG)
+![Screen 1](./ABulletForOneOfUs/Screenshots/TAT4.PNG)
+![Screen 1](./ABulletForOneOfUs/Screenshots/TAT5.PNG)
